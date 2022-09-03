@@ -8,8 +8,7 @@ public class KrataEcoAPI extends JavaPlugin {
     KrataDatabase database;
     @Override
     public void onEnable() {
-        System.setProperty("org.litote.mongo.test.mapping.service", "org.litote.kmongo.jackson.JacksonClassMappingTypeService");
-
+        
         economy = new KrataEconomy();
         database = new KrataDatabase();
 
