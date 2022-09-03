@@ -10,18 +10,21 @@ import org.litote.kmongo.getCollection
 
 data class Dinero(val cuenta: String, val cantidad: Int)
 
+@Deprecated("Eliminada hasta nuevo aviso")
 class Database {
 
-    lateinit var client: MongoClient
+    fun clientDb(Conexion: String): MongoClient {
 
-    fun createDb(Conexion: String): MongoClient {
-        client = KMongo.createClient(Conexion)
-        return client
+        var newClient = Conexion
+        println(newClient)
+        return KMongo.createClient("$Conexion")
+
     }
+
 }
 
-val database = Database().client
-val collection = database.getDatabase("Dinero").getCollection<Dinero>()
+
+val collection = KMongo.createClient("mongodb+srv://admin:admin@cluster0.hclenhx.mongodb.net/?retryWrites=true&w=majority").getDatabase("KrataEconomy").getCollection<Dinero>()
 
 
 class Api {
