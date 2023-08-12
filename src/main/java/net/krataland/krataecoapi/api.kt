@@ -1,23 +1,28 @@
 package net.krataland.krataecoapi
 
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
+import org.bson.UuidRepresentation
 import org.bukkit.entity.Player
 import org.litote.kmongo.KMongo
 import org.litote.kmongo.findOne
 import org.litote.kmongo.getCollection
+import org.litote.kmongo.util.KMongoUtil
 
 data class Dinero(val cuenta: String, val cantidad: Int)
 class KrataDatabase {
 
-    lateinit var client: MongoClient
-    fun createDb(Conexion: String): MongoClient {
+    val settings = MongoClientSettings.builder()
+        .applyConnectionString(ConnectionString("mongodb+srv://admin:admin@cluster0.pwv6rqi.mongodb.net/"))
+        .uuidRepresentation(UuidRepresentation.STANDARD)
+        .codecRegistry(KMongoUtil.defaultCodecRegistry)
+        .build()
 
-        client = KMongo.createClient("$Conexion")
-        return client
-    }
+    var client = KMongo.createClient(settings)
 
     fun connectDb(): MongoDatabase {
         return client.getDatabase("KrataEconomy")
@@ -111,13 +116,13 @@ class KrataEconomy {
      * Retorna los datos de una cuenta.
      * @return getEconomy#nombre getEconomy#dinero
      */
-    fun getEconomy(Name: String): Any {
+    fun getEconomy(Name: String): Any? {
         val datos = collection.findOne("{cuenta:'${Name}'}")
 
         return if(datos?.cuenta == null){
             "No existe tal cuenta"
         } else {
-            "Economia de ${datos?.cuenta}\n- Dinero: ${datos?.cantidad}"
+            return datos.cantidad;
         }
 
     }
