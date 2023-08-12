@@ -16,8 +16,9 @@ import org.litote.kmongo.util.KMongoUtil
 data class Dinero(val cuenta: String, val cantidad: Int)
 
 class KrataDatabase {
-    lateinit var connectionURL: String
-    lateinit var dbName: String
+
+    var connectionURL: String = ""
+    var dbName: String = ""
 
     val settings = MongoClientSettings.builder()
         .applyConnectionString(ConnectionString(connectionURL))
