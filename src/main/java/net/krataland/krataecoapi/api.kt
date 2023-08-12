@@ -14,10 +14,13 @@ import org.litote.kmongo.getCollection
 import org.litote.kmongo.util.KMongoUtil
 
 data class Dinero(val cuenta: String, val cantidad: Int)
+
 class KrataDatabase {
+    lateinit var connectionURL: String
+    lateinit var dbName: String
 
     val settings = MongoClientSettings.builder()
-        .applyConnectionString(ConnectionString("mongodb+srv://admin:admin@cluster0.pwv6rqi.mongodb.net/"))
+        .applyConnectionString(ConnectionString(connectionURL))
         .uuidRepresentation(UuidRepresentation.STANDARD)
         .codecRegistry(KMongoUtil.defaultCodecRegistry)
         .build()
@@ -25,7 +28,7 @@ class KrataDatabase {
     var client = KMongo.createClient(settings)
 
     fun connectDb(): MongoDatabase {
-        return client.getDatabase("KrataEconomy")
+        return client.getDatabase(dbName)
     }
 
 }
@@ -44,10 +47,10 @@ class KrataEconomy {
         val dato = collection.findOne("{cuenta:'${ecoName.name}'}")
 
         return if (dato?.cuenta.toString() == ecoName.name) {
-            ecoName.sendMessage("Ya existe ese valor")
+            "Ya existe la cuenta."
         } else {
             collection.insertOne(Dinero(ecoName.name, 0))
-            ecoName.sendMessage("Creando cuenta para ${ecoName.name} | Dinero: 0")
+            "Creando cuenta para ${ecoName.name} | Dinero: 0"
         }
 
     }
